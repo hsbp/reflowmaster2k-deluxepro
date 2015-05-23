@@ -186,6 +186,7 @@ class Pid:
 
     def start(self):
         if not self._isRunning:
+            self._isRunning = True
             self.initialize()
             self._updateThread = threading.Thread(target=self._update)
             self._updateThread.start()
