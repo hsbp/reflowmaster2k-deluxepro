@@ -1,0 +1,143 @@
+Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Sun 24 May 2015 02:33:23 AM CEST
+
+BeginCmp
+TimeStamp = /55610525;
+Reference = C1;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610534;
+Reference = C2;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610543;
+Reference = C3;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55523B00;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-5MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /556097FA;
+Reference = D2;
+ValeurCmp = ZENER;
+IdModule  = D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55609AA8;
+Reference = D3;
+ValeurCmp = SCHOTTKY;
+IdModule  = D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610085;
+Reference = D4;
+ValeurCmp = SCHOTTKY;
+IdModule  = D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55468B05;
+Reference = IC1;
+ValeurCmp = TLP3036;
+IdModule  = DIP-6__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /55469219;
+Reference = R1;
+ValeurCmp = 6.2K;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560A1BC;
+Reference = R2;
+ValeurCmp = 230;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55469293;
+Reference = R3;
+ValeurCmp = R;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55523BF8;
+Reference = R4;
+ValeurCmp = 100;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55609BFF;
+Reference = R5;
+ValeurCmp = 4.7k;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /556101DC;
+Reference = R6;
+ValeurCmp = R;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /556101A0;
+Reference = R7;
+ValeurCmp = 330;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560A17F;
+Reference = RV1;
+ValeurCmp = POT;
+IdModule  = POT_CMS;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610263;
+Reference = RV2;
+ValeurCmp = POT;
+IdModule  = POT_CMS;
+EndCmp
+
+BeginCmp
+TimeStamp = /5561014F;
+Reference = RV3;
+ValeurCmp = POT;
+IdModule  = POT_CMS;
+EndCmp
+
+BeginCmp
+TimeStamp = /55468BAC;
+Reference = U1;
+ValeurCmp = TRIAC;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560FFE9;
+Reference = U2;
+ValeurCmp = TLC2272;
+IdModule  = DIP-8__300;
+EndCmp
+
+EndListe
