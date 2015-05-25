@@ -22,10 +22,7 @@ else:
 for temp, res in profile.items():
     b.append([1 / (temp + 273.15)])
     lnR = math.log(res)
-    m = []
-    for exp in exps:
-        m.append(lnR ** exp)
-    a.append(m)
+    a.append([(lnR ** exp) for exp in exps])
 
 #print(a, b)
 
