@@ -1,0 +1,150 @@
+Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Mon 25 May 2015 03:52:15 AM CEST
+
+BeginCmp
+TimeStamp = /55610525;
+Reference = C1;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610534;
+Reference = C2;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55610543;
+Reference = C3;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /55523B00;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-3MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /556097FA;
+Reference = D2;
+ValeurCmp = BAT46;
+IdModule  = DO-35;
+EndCmp
+
+BeginCmp
+TimeStamp = /55609AA8;
+Reference = D3;
+ValeurCmp = BZX55C5V1;
+IdModule  = DO-35;
+EndCmp
+
+BeginCmp
+TimeStamp = /55627F3D;
+Reference = D4;
+ValeurCmp = VREFDIODE;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /55468B05;
+Reference = IC1;
+ValeurCmp = TLP3036;
+IdModule  = DIP-6__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /556262CF;
+Reference = P1;
+ValeurCmp = CONN_8;
+IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /55626455;
+Reference = P2;
+ValeurCmp = Toaster;
+IdModule  = 2PIN_6mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /556266DF;
+Reference = P3;
+ValeurCmp = 220V;
+IdModule  = 2PIN_6mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /55469219;
+Reference = R1;
+ValeurCmp = 6.2K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560A1BC;
+Reference = R2;
+ValeurCmp = 230;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55523BF8;
+Reference = R4;
+ValeurCmp = 100;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55609BFF;
+Reference = R5;
+ValeurCmp = 4.7k;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /556101DC;
+Reference = R6;
+ValeurCmp = R;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /556101A0;
+Reference = R7;
+ValeurCmp = 330;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560A17F;
+Reference = RV1;
+ValeurCmp = POT;
+IdModule  = SIL-3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5561014F;
+Reference = RV3;
+ValeurCmp = POT;
+IdModule  = SIL-3;
+EndCmp
+
+BeginCmp
+TimeStamp = /55468BAC;
+Reference = U1;
+ValeurCmp = TRIAC;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /5560FFE9;
+Reference = U2;
+ValeurCmp = TLC2272;
+IdModule  = DIP-8__300;
+EndCmp
+
+EndListe
