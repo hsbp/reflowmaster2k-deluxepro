@@ -1,6 +1,8 @@
 import serial
 import shh
 import pid
+import sys
+import os
 
 class ReflowControl:
 
@@ -44,5 +46,9 @@ class ReflowControl:
 
 if __name__ == '__main__':
     shhcoeffs = (0.049182398851342568, -0.015880288085651714, 0.0018439776862060255, -7.5225149204180178e-05)
-    controller = ReflowControl("/dev/tty.SLAB_USBtoUART", *shhcoeffs)
+    if len(sys.argv)>1 and os.access(sys.argv[1], os.W_OK | os.R_OK):
+        serialport=sys.argv[1]
+    else:
+        serialport="/dev/tty.SLAB_USBtoUART"
+    controller = ReflowControl(serialport, *shhcoeffs)
     controller.do()
