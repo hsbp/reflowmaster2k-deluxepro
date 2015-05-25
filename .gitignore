@@ -60,6 +60,6 @@ docs/_build/
 target/
 .gitignore
 .arch
-.kicad_pcb-bak
+*.kicad_pcb-bak
 *.bak
 *.bck
