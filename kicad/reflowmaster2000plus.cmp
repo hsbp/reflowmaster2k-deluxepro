@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Mon 25 May 2015 03:52:15 AM CEST
+Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Mon 25 May 2015 09:49:31 PM CEST
 
 BeginCmp
 TimeStamp = /55610525;
@@ -67,14 +67,14 @@ BeginCmp
 TimeStamp = /55626455;
 Reference = P2;
 ValeurCmp = Toaster;
-IdModule  = 2PIN_6mm;
+IdModule  = WireConnection_1-5mmDrill;
 EndCmp
 
 BeginCmp
 TimeStamp = /556266DF;
 Reference = P3;
 ValeurCmp = 220V;
-IdModule  = 2PIN_6mm;
+IdModule  = WireConnection_1-5mmDrill;
 EndCmp
 
 BeginCmp

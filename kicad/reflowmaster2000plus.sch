@@ -11,6 +11,7 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
+LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -40,6 +41,7 @@ LIBS:gennum
 LIBS:graphic
 LIBS:hc11
 LIBS:logo
+LIBS:microchip1
 LIBS:microchip_pic10mcu
 LIBS:microchip_pic12mcu
 LIBS:microchip_pic16mcu
@@ -57,8 +59,9 @@ LIBS:supertex
 LIBS:transf
 LIBS:ttl_ieee
 LIBS:video
+LIBS:my
 LIBS:reflowmaster2000plus-cache
-EELAYER 25 0
+EELAYER 27 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -335,8 +338,6 @@ F 3 "" H 4250 5200 60  0000 C CNN
 	1    4250 5200
 	1    0    0    -1  
 $EndComp
-Text Label 3350 4800 0    60   ~ 0
-+12V
 Text Label 3300 4800 0    21   ~ 0
 +12V
 Text Label 3300 4700 0    21   ~ 0
