@@ -1,23 +1,23 @@
-Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Mon 25 May 2015 09:49:31 PM CEST
+Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Wed 27 May 2015 02:53:44 AM CEST
 
 BeginCmp
 TimeStamp = /55610525;
 Reference = C1;
-ValeurCmp = C;
+ValeurCmp = 10u;
 IdModule  = C1;
 EndCmp
 
 BeginCmp
 TimeStamp = /55610534;
 Reference = C2;
-ValeurCmp = C;
+ValeurCmp = 100n;
 IdModule  = C1;
 EndCmp
 
 BeginCmp
 TimeStamp = /55610543;
 Reference = C3;
-ValeurCmp = C;
+ValeurCmp = 10n;
 IdModule  = C1;
 EndCmp
 
@@ -52,7 +52,7 @@ EndCmp
 BeginCmp
 TimeStamp = /55468B05;
 Reference = IC1;
-ValeurCmp = TLP3036;
+ValeurCmp = TLP3063;
 IdModule  = DIP-6__300;
 EndCmp
 
@@ -87,14 +87,14 @@ EndCmp
 BeginCmp
 TimeStamp = /5560A1BC;
 Reference = R2;
-ValeurCmp = 230;
+ValeurCmp = 330;
 IdModule  = R3;
 EndCmp
 
 BeginCmp
 TimeStamp = /55523BF8;
 Reference = R4;
-ValeurCmp = 100;
+ValeurCmp = 330;
 IdModule  = R3;
 EndCmp
 
@@ -108,7 +108,7 @@ EndCmp
 BeginCmp
 TimeStamp = /556101DC;
 Reference = R6;
-ValeurCmp = R;
+ValeurCmp = 10k;
 IdModule  = R3;
 EndCmp
 
@@ -122,14 +122,14 @@ EndCmp
 BeginCmp
 TimeStamp = /5560A17F;
 Reference = RV1;
-ValeurCmp = POT;
+ValeurCmp = 500;
 IdModule  = SIL-3;
 EndCmp
 
 BeginCmp
 TimeStamp = /5561014F;
 Reference = RV3;
-ValeurCmp = POT;
+ValeurCmp = 500;
 IdModule  = SIL-3;
 EndCmp
 
@@ -137,7 +137,7 @@ BeginCmp
 TimeStamp = /55468BAC;
 Reference = U1;
 ValeurCmp = TRIAC;
-IdModule  = TO92;
+IdModule  = TO220_VERT;
 EndCmp
 
 BeginCmp
