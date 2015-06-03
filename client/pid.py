@@ -5,10 +5,13 @@ Based on http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-int
 import time
 import threading
 
-class Pid:
+class Pid(object):
 
     class Modes:
-        AUTO = 1
+        AUTO_READ = 1
+        AUTO_CALC = 2
+        AUTO_OUT = 4
+        AUTO_FULL = AUTO_READ | AUTO_CALC | AUTO_OUT
         MANUAL = 0
         DIRECT = 0
         REVERSE = 1
@@ -23,7 +26,7 @@ class Pid:
 
         self._sampleTime = 1
         self._cntrlDir = Pid.Modes.DIRECT
-        self._cntrlMode = Pid.Modes.AUTO
+        self._cntrlMode = Pid.Modes.AUTO_FULL
 
         self._input = 0
         self._output = 0
@@ -36,7 +39,7 @@ class Pid:
 
         self._updateCallback = updateCallback
         self._outputChangedCallback = outputChangedCallback
-        self._isRunning = False
+        self._stopReq = threading.Event()
         self._updateThread = None
 
     @property
@@ -62,8 +65,8 @@ class Pid:
     def kd(self):
         return self._okd
 
-    @ki.setter
-    def ki(self, val):
+    @kd.setter
+    def kd(self, val):
         self._okd = val
         if self._cntrlDir == Pid.Modes.REVERSE:
             val *= -1
@@ -98,10 +101,9 @@ class Pid:
 
     @cntrlMode.setter
     def cntrlMode(self, val):
-        isAuto = val == Pid.Modes.AUTO
-        if isAuto != self._inAuto:
+        if self._cntrlMode ^ val:
             self.initialize()
-        self._inAuto = isAuto
+        self._cntrlMode = val
 
     @property
     def maxOut(self):
@@ -129,16 +131,17 @@ class Pid:
 
     @inputx.setter
     def inputx(self, val):
-        self._input = val
+        if not self._cntrlMode & Pid.Modes.AUTO_READ:
+            self._input = val
 
     @property
     def output(self):
-        return self._input
+        return self._output
 
     @output.setter
     def output(self, val):
-        if self._cntrlMode == Pid.Modes.MANUAL:
-            self._input = val
+        if not self._cntrlMode & Pid.Modes.AUTO_CALC:
+            self._output = val
 
     @property
     def setPoint(self):
@@ -150,7 +153,7 @@ class Pid:
 
     @property
     def isRunning(self):
-        return self._isRunning
+        return not self._stopReq.isSet()
 
     def _clamp(self, val, low, high):
         if val > high:
@@ -172,26 +175,31 @@ class Pid:
         self._lastInput = self._input
 
     def _update(self):
-        while self._isRunning:
+        self._stopReq.clear()
+        lastOutput = ~self._output
+        while not self._stopReq.isSet():
             begin = time.time()
-            if self._updateCallback is not None:
+            if self._cntrlMode & Pid.Modes.AUTO_READ and self._updateCallback is not None:
                 self._input = self._updateCallback()
-            lastOutput = self._output
-            if self._cntrlMode == Pid.Modes.AUTO:
+            if self.cntrlMode & Pid.Modes.AUTO_CALC:
                 self.compute()
-            if self._outputChangedCallback is not None and self._output != lastOutput:
+            if self._cntrlMode & Pid.Modes.AUTO_OUT and \
+               self._outputChangedCallback is not None and \
+               True:
+               #self._output != lastOutput:
                 self._outputChangedCallback(self._output)
+            lastOutput = self._output
             while time.time() < begin + self._sampleTime:
-                time.sleep(self._sampleTime / 100)
+                time.sleep(0.05)
+                if self._stopReq.isSet():
+                    break
 
     def start(self):
-        if not self._isRunning:
-            self._isRunning = True
+        if not self._stopReq.isSet():
             self.initialize()
             self._updateThread = threading.Thread(target=self._update)
             self._updateThread.start()
 
     def stop(self):
-        if self._isRunning:
-            self._isRunning = False
-            self._updateThread.join()
+        self._stopReq.set()
+        self._updateThread.join()
