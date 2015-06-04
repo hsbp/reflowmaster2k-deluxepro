@@ -5,6 +5,8 @@ import sys
 import os
 import threading
 import uif
+import visualizer
+import random
 
 class ReflowControl:
 
@@ -27,14 +29,15 @@ class ReflowControl:
         self._stopReq.clear()
         self._adcValue = 300
         self._uif = uif.Uif(self)
-        self._inShowStatus = 0
-        self._outShowStatus = 0
+        self._graph = None
         self._new = False
+        self._visuBuff = []
 
     def _updateTemp(self):
         ktyRes = (self._uRef * self._adcValue / 1023.0 * self._adcComp) / self._iRef
         self._ktyTemp = self._shhConverter.rToTempCelsius(ktyRes)
-        self._uif.disp("in", "ADC: ", self._adcValue, "R: ", ktyRes, "t: ", self._ktyTemp, "Buff: ", self._serial.inWaiting(), "New: ", self._new)
+        if self._serial.isOpen():
+            self._uif.disp("in", "ADC: ", self._adcValue, "R: ", ktyRes, "t: ", self._ktyTemp, "Buff: ", self._serial.inWaiting(), "New: ", self._new)
         self._new = False
         return self._ktyTemp
 
@@ -103,13 +106,28 @@ class ReflowControl:
         self._readAdcThread = threading.Thread(target=self._readAdc)
         self._readAdcThread.start()
         self._pid.start()
-        self._uif.listen()
+        self._uif.start()
+
+        self._graphLen = 5 * 60 * 2
+        refData = [0 for _i in range(self._graphLen)]
+        self._graph = visualizer.Visualizer(0.5, 1, refData, self.gen)
+        self._graph._axes.set_ylim([80, 120])
+        #self._graph._axes.set_xlim([0, 300])
+        self._graph.start()
+
+    def gen(self):
+        if len(self._visuBuff) > self._graphLen - 1:
+            self._visuBuff = self._visuBuff[1:]
+        self._visuBuff.append(self._ktyTemp)
+        return self._visuBuff
 
     def stop(self):
         self._stopReq.set()
-        self._serial.close()
+        self._serial.close()  # Raises exception in readAdcThread
         self._readAdcThread.join()
         self._pid.stop()
+        self._uif.stop()
+        self._graph.stop()
 
 if __name__ == '__main__':
     if len(sys.argv)>1 and os.access(sys.argv[1], os.W_OK | os.R_OK):
@@ -117,6 +135,7 @@ if __name__ == '__main__':
     else:
         serialport="/dev/tty.SLAB_USBtoUART"
         serialport="/dev/tty.Bluetooth-Incoming-Port"
+        #serialport = "/dev/tty.usbserial-A6004adL"
     controller = ReflowControl(serialport)
     controller.start()
 
