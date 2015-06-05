@@ -6,16 +6,22 @@ import os
 import threading
 import uif
 import visualizer
+import time
 import random
 
 class ReflowControl:
 
-    def __init__(self, portName, shhCoeffs=None, pidCoeffs=None):
+    def __init__(self, portName, shhCoeffs=None, pidCoeffs=None, profile=None):
         self._shhConverter = None
         if shhCoeffs is None:
             shhCoeffs = (0.049182398851342568, -0.015880288085651714, 0.0018439776862060255, -7.5225149204180178e-05)
+        if pidCoeffs is None:
+            pidCoeffs = (30.0, 2.0, 7.0)
+        if profile is None:
+            profile = {"rampup": 6, "ts": 2 * 60, "Tsmin": 135, "Tsmax": 155, "tl": 150, "Tl": 183, "tp": 30, "Tp": 225, "rampdown": 10}
+        self._profile = profile
         self._shhConverter = shh.SteinHaart(*shhCoeffs)
-        self._pid = pid.Pid(self._updateTemp, self._setPwm)
+        self._pid = pid.Pid(self._updateTemp, self._setPwm, pidCoeffs)
         self._portName = portName
         if self._portName:
             self._serial = serial.Serial(port=self._portName, baudrate=57600)
@@ -26,12 +32,14 @@ class ReflowControl:
         self._adcComp = 6.0 / 5.0
         self._readAdcThread = None
         self._stopReq = threading.Event()
+        self._undoReq = threading.Event()
         self._stopReq.clear()
-        self._adcValue = 300
+        self._adcValue = 350
         self._uif = uif.Uif(self)
         self._graph = None
         self._new = False
         self._visuBuff = []
+        self._refData = []
 
     def _updateTemp(self):
         ktyRes = (self._uRef * self._adcValue / 1023.0 * self._adcComp) / self._iRef
@@ -102,21 +110,35 @@ class ReflowControl:
             else:
                 raise
 
+    def _do(self):
+        self._workerThread.start()
+        i = 0
+        refLen = len(self._refData)
+        while not self._undoReq.isSet() and i < refLen:
+            self._pid.inputx = self._refData[i]
+            i += 1
+            time.sleep(0.5)
+
+    def _undo(self):
+        self._undoReq.isSet()
+        self._workerThread.join()
+
     def start(self):
         self._readAdcThread = threading.Thread(target=self._readAdc)
         self._readAdcThread.start()
         self._pid.start()
         self._uif.start()
+        self._workerThread = threading.Thread(target=self._do)
+        self._refData = self._profileToTt(self._profile)
+        self._do()
+        self._graph = visualizer.Visualizer(0.5, 1, self._refData, self.gen)
 
-        self._graphLen = 5 * 60 * 2
-        refData = [0 for _i in range(self._graphLen)]
-        self._graph = visualizer.Visualizer(0.5, 1, refData, self.gen)
-        self._graph._axes.set_ylim([80, 120])
+        self._graph._axes.set_ylim([80, 250])
         #self._graph._axes.set_xlim([0, 300])
         self._graph.start()
 
     def gen(self):
-        if len(self._visuBuff) > self._graphLen - 1:
+        if len(self._visuBuff) > len(self._refData) - 1:
             self._visuBuff = self._visuBuff[1:]
         self._visuBuff.append(self._ktyTemp)
         return self._visuBuff
@@ -138,6 +160,3 @@ if __name__ == '__main__':
         #serialport = "/dev/tty.usbserial-A6004adL"
     controller = ReflowControl(serialport)
     controller.start()
-
-
-profile = {"rampup": 6, "ts": 2 * 60, "Tsmin": 135, "Tsmax": 155, "tl": 150, "Tl": 183, "tp": 30, "Tp": 225, "rampdown": 10}

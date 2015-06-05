@@ -16,11 +16,10 @@ class Pid(object):
         DIRECT = 0
         REVERSE = 1
 
-    def __init__(self, updateCallback=None, outputChangedCallback=None):
-        self._kp = 1
-        self._ki = 0
-        self._kd = 0
-
+    def __init__(self, updateCallback=None, outputChangedCallback=None, coeffs=None):
+        if coeffs is None:
+            coeffs = (1, 0, 0)
+        self._kp, self._ki, self._kd = coeffs
         self._oki = 0
         self._okd = 0
 

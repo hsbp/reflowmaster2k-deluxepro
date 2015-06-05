@@ -125,6 +125,12 @@ class Uif(object):
     def _cmd_quit(self, param):
         self._cntrlr.stop()
 
+    def _cmd_do(self):
+        self._cntrlr._do()
+
+    def _cmd_undo(self):
+        self._cntrlr._undo()
+
     def disp(self, key, *args):
         try:
             self._dispState[key]
