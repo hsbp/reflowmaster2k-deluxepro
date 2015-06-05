@@ -12,8 +12,11 @@ class SteinHaart:
         self._D = D
 
     def rToTempKelvin(self, resInOhm):
-        lnR = math.log(resInOhm)
-        t = 1 / (self._A + self._B * lnR + self._C * lnR**2 + self._D * lnR**3)
+        if resInOhm <= 0:
+            t = 0
+        else:
+            lnR = math.log(resInOhm)
+            t = 1 / (self._A + self._B * lnR + self._C * lnR**2 + self._D * lnR**3)
         return t
 
     def rToTempCelsius(self, resInOhm):

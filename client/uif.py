@@ -1,8 +1,11 @@
+import threading
 
 class Uif(object):
 
     def __init__(self, controller):
         self._cntrlr = controller
+        self._listenerThread = None
+        self._stopReq = threading.Event()
         self._dispState = {}
 
     def _notfound(self, _dummy):
@@ -88,7 +91,12 @@ class Uif(object):
             except Exception, e:
                 self._failed(e)
         else:
-            self._failed(ValueError("Too few parameter"))
+            manstr = "\n\t".join(self._dispState.keys())
+            if not manstr:
+                manstr = "There are no dispable props"
+            else:
+                manstr = "Dispable properties:\n\t" + manstr
+            print(manstr)
 
     def _cmd_man(self, param):
         """
@@ -142,3 +150,12 @@ class Uif(object):
                     cmdProcessor(params.strip())
         except KeyboardInterrupt:
             self._cntrlr.stop()
+
+    def start(self):
+        self._listenerThread = threading.Thread(target=self.listen)
+        self._listenerThread.start()
+
+    def stop(self):
+        self._stopReq.set()
+        #self._listenerThread.join()
+

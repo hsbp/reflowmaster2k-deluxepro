@@ -32,13 +32,14 @@ class Visualizer:
     def start(self):
         self._axes.plot(self._xdata, self._refData, "b-")
         self._liveDataLine, = self._axes.plot([], [], "r-")
+        plot.grid()
         plot.show()
-        #self._draw()
-        self._drawThread.start()
+        self._draw()
+        #self._drawThread.start()
 
     def stop(self):
         self._stopReq.set()
-        self._drawThread.join()
+        #self._drawThread.join()
 
 
 if __name__ == '__main__':

@@ -185,8 +185,7 @@ class Pid(object):
                 self.compute()
             if self._cntrlMode & Pid.Modes.AUTO_OUT and \
                self._outputChangedCallback is not None and \
-               True:
-               #self._output != lastOutput:
+               self._output != lastOutput:
                 self._outputChangedCallback(self._output)
             lastOutput = self._output
             while time.time() < begin + self._sampleTime:
