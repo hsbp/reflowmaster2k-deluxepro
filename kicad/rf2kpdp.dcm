@@ -1,0 +1,68 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +12V
+K POWER, PWR
+$ENDCMP
+#
+$CMP BAT46
+D Diode schottky
+$ENDCMP
+#
+$CMP BTA24-600
+D BTA24
+$ENDCMP
+#
+$CMP C
+D Unpolarized capacitor
+$ENDCMP
+#
+$CMP C5V6
+D Diode zener
+K DEV DIODE
+$ENDCMP
+#
+$CMP LED
+K LED
+$ENDCMP
+#
+$CMP LM385-1.2
+D Voltage reference diode
+K DEV DIODE REF
+$ENDCMP
+#
+$CMP MOC3061M
+D MOC3061M, DIP6,  Zero Cross Opto-Triac, Vdrm 600V, Ift 15mA
+K Opto-Triac Opto Triac Zero Cross
+F http://www.fairchildsemi.com/ds/MO/MOC3061M.pdf
+$ENDCMP
+#
+$CMP MOC3062M
+D MOC3062M, DIP6,  Zero Cross Opto-Triac, Vdrm 600V, Ift 10mA
+K Opto-Triac Opto Triac Zero Cross
+F http://www.fairchildsemi.com/ds/MO/MOC3061M.pdf
+$ENDCMP
+#
+$CMP MOC3063M
+D MOC3063M, DIP6,  Zero Cross Opto-Triac, Vdrm 600V, Ift 5mA
+K Opto-Triac Opto Triac Zero Cross
+F http://www.fairchildsemi.com/ds/MO/MOC3061M.pdf
+$ENDCMP
+#
+$CMP MOC3162M
+D MOC3162M, DIP6,  Zero Cross Opto-Triac, Vdrm 600V, Ift 10mA, dv/dt 1000
+K Opto-Triac Opto Triac Zero Cross
+F http://www.fairchildsemi.com/ds/MO/MOC3061M.pdf
+$ENDCMP
+#
+$CMP MOC3163M
+D MOC3163M, DIP6,  Zero Cross Opto-Triac, Vdrm 600V, Ift 5mA, dv/dt 1000
+K Opto-Triac Opto Triac Zero Cross
+F http://www.fairchildsemi.com/ds/MO/MOC3061M.pdf
+$ENDCMP
+#
+$CMP R
+D Resistor
+K R DEV
+$ENDCMP
+#
+#End Doc Library

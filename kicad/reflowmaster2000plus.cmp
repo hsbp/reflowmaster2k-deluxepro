@@ -1,150 +1,136 @@
-Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = Wed 27 May 2015 02:53:44 AM CEST
+Cmp-Mod V01 Created by Cvpcb (2015-05-22 BZR 5678)-product   date = 2015 July 12, Sunday 20:18:29
 
 BeginCmp
 TimeStamp = /55610525;
 Reference = C1;
 ValeurCmp = 10u;
-IdModule  = C1;
+IdModule  = rf2kpdp:SM0805-C;
 EndCmp
 
 BeginCmp
 TimeStamp = /55610534;
 Reference = C2;
 ValeurCmp = 100n;
-IdModule  = C1;
+IdModule  = rf2kpdp:SM0805-C;
 EndCmp
 
 BeginCmp
 TimeStamp = /55610543;
 Reference = C3;
 ValeurCmp = 10n;
-IdModule  = C1;
+IdModule  = rf2kpdp:SM0805-C;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A289B6;
+Reference = D1;
+ValeurCmp = LM385-1.2;
+IdModule  = rf2kpdp:TO-92_LE33CZ;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A2CC47;
+Reference = D2;
+ValeurCmp = BAT46;
+IdModule  = rf2kpdp:SOD-80;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A2C64C;
+Reference = D3;
+ValeurCmp = C5V6;
+IdModule  = rf2kpdp:SOD-80;
 EndCmp
 
 BeginCmp
 TimeStamp = /55523B00;
-Reference = D1;
-ValeurCmp = LED;
-IdModule  = LED-3MM;
-EndCmp
-
-BeginCmp
-TimeStamp = /556097FA;
-Reference = D2;
-ValeurCmp = BAT46;
-IdModule  = DO-35;
-EndCmp
-
-BeginCmp
-TimeStamp = /55609AA8;
-Reference = D3;
-ValeurCmp = BZX55C5V1;
-IdModule  = DO-35;
-EndCmp
-
-BeginCmp
-TimeStamp = /55627F3D;
 Reference = D4;
-ValeurCmp = VREFDIODE;
-IdModule  = TO92;
+ValeurCmp = LED;
+IdModule  = rf2kpdp:LED-3MM;
 EndCmp
 
 BeginCmp
-TimeStamp = /55468B05;
-Reference = IC1;
-ValeurCmp = TLP3063;
-IdModule  = DIP-6__300;
-EndCmp
-
-BeginCmp
-TimeStamp = /556262CF;
+TimeStamp = /5598FF70;
 Reference = P1;
-ValeurCmp = CONN_8;
-IdModule  = SIL-8;
+ValeurCmp = CONN_02X04;
+IdModule  = rf2kpdp:Pin_Header_Straight_2x04;
 EndCmp
 
 BeginCmp
-TimeStamp = /55626455;
+TimeStamp = /55735AEE;
 Reference = P2;
-ValeurCmp = Toaster;
-IdModule  = WireConnection_1-5mmDrill;
+ValeurCmp = 230V;
+IdModule  = rf2kpdp:1pin-small;
 EndCmp
 
 BeginCmp
-TimeStamp = /556266DF;
+TimeStamp = /55735ADF;
 Reference = P3;
-ValeurCmp = 220V;
-IdModule  = WireConnection_1-5mmDrill;
-EndCmp
-
-BeginCmp
-TimeStamp = /55469219;
-Reference = R1;
-ValeurCmp = 6.2K;
-IdModule  = R3;
-EndCmp
-
-BeginCmp
-TimeStamp = /5560A1BC;
-Reference = R2;
-ValeurCmp = 330;
-IdModule  = R3;
-EndCmp
-
-BeginCmp
-TimeStamp = /55523BF8;
-Reference = R4;
-ValeurCmp = 330;
-IdModule  = R3;
-EndCmp
-
-BeginCmp
-TimeStamp = /55609BFF;
-Reference = R5;
-ValeurCmp = 4.7k;
-IdModule  = R3;
+ValeurCmp = Toaster;
+IdModule  = rf2kpdp:1pin-small;
 EndCmp
 
 BeginCmp
 TimeStamp = /556101DC;
-Reference = R6;
+Reference = R1;
 ValeurCmp = 10k;
-IdModule  = R3;
+IdModule  = rf2kpdp:SM0805-R;
 EndCmp
 
 BeginCmp
-TimeStamp = /556101A0;
-Reference = R7;
-ValeurCmp = 330;
-IdModule  = R3;
-EndCmp
-
-BeginCmp
-TimeStamp = /5560A17F;
-Reference = RV1;
+TimeStamp = /5589905D;
+Reference = R2;
 ValeurCmp = 500;
-IdModule  = SIL-3;
+IdModule  = rf2kpdp:SM0805-R;
 EndCmp
 
 BeginCmp
-TimeStamp = /5561014F;
-Reference = RV3;
+TimeStamp = /5560A1BC;
+Reference = R3;
 ValeurCmp = 500;
-IdModule  = SIL-3;
+IdModule  = rf2kpdp:SM0805-R;
 EndCmp
 
 BeginCmp
-TimeStamp = /55468BAC;
-Reference = U1;
-ValeurCmp = TRIAC;
-IdModule  = TO220_VERT;
+TimeStamp = /55609BFF;
+Reference = R4;
+ValeurCmp = 1k;
+IdModule  = rf2kpdp:SM0805-R;
+EndCmp
+
+BeginCmp
+TimeStamp = /55523BF8;
+Reference = R5;
+ValeurCmp = 500;
+IdModule  = rf2kpdp:SM0805-R;
+EndCmp
+
+BeginCmp
+TimeStamp = /55469219;
+Reference = R6;
+ValeurCmp = 6.2K;
+IdModule  = rf2kpdp:Resistor_Horizontal_RM10mm;
 EndCmp
 
 BeginCmp
 TimeStamp = /5560FFE9;
-Reference = U2;
+Reference = U1;
 ValeurCmp = TLC2272;
-IdModule  = DIP-8__300;
+IdModule  = rf2kpdp:SO8E;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A2AA72;
+Reference = U2;
+ValeurCmp = MOC3063M;
+IdModule  = rf2kpdp:DIP-6__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A295D6;
+Reference = U3;
+ValeurCmp = BTA24;
+IdModule  = rf2kpdp:TO220AB_BTA24;
 EndCmp
 
 EndListe
