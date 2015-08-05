@@ -27,26 +27,53 @@ class Uif(object):
 
     def _cmd_kp(self, param):
         """
-        Sets or returns the PID's proportional coefficient
+        Displays or sets the PID's proportional coefficient.
         """
         self._pidparam("kp", param)
 
     def _cmd_ki(self, param):
+        """
+        Displays or sets the PID's integral coefficient.
+        """
         self._pidparam("ki", param)
 
     def _cmd_kd(self, param):
+        """
+        Displays or sets the PID's derivate coefficient.
+        """
         self._pidparam("kd", param)
 
     def _cmd_spt(self, param):
+        """
+        Displays or sets the target temperature in Celsius degrees.
+        """
         self._pidparam("setPoint", param)
 
     def _cmd_in(self, param):
+        """
+        Displays or sets the PID's input value. Set takes effect only if the pid's AUTO_READ flag is cleared.
+        Refer to "pidm" command.
+        """
         self._pidparam("inputx", param)
 
     def _cmd_out(self, param):
+        """
+        Displays or sets the PID's output value. Set takes effect only if the pid's AUTO_CALC flag is cleared.
+        Refer to "pidm" command.
+        """
         self._pidparam("output", param)
 
     def _cmd_pidm(self, param):
+        """
+        Displays or sets the PID's mode flags. These flags are:
+        read: If set, the PID periodically calls its update callback, and uses the returned value as the current input.
+        out: If set, the PID periodically calls its output changed callback.
+        calc: Enables the actual PID algorithm. If celared the output keeps its last state, which is overridable with
+              the "out" command.
+        full: The same as if the previous three flags would be set.
+        To set a flag type its name after the pidm command, you can specify multiple ones separated by spaces. If one or
+        more is omitted, then that flag(s) will be cleared.
+        """
         pidModes = self._cntrlr._pid.Modes
         autoModes = {pidModes.AUTO_READ: "read", pidModes.AUTO_CALC: "calc", pidModes.AUTO_OUT: "out"}
         if param == "":
@@ -73,6 +100,11 @@ class Uif(object):
             self._cntrlr._pid.cntrlMode = mode
 
     def _cmd_pwr(self, param):
+        """
+        Displays or sets the PID's output value in percentage, relative to the maximal output value.
+        Set takes effect only if the pid's AUTO_CALC flag is cleared. Refer to "pidm" command.
+        """
+
         if param == "":
             print("%0.1f" % (self._cntrlr._pid.output * 100 / self._cntrlr._pid.maxOut))
         else:
@@ -80,6 +112,12 @@ class Uif(object):
             self._cntrlr._pid.output = out
 
     def _cmd_disp(self, param):
+        """
+        If called without parameters displays the "dispable" properties.
+        If called with the prop name, without further parameters, then prints it one time.
+        If called with the prop name and "on" afterwards then periodically prints the prop until called the same prop
+        name with "off" parameter.
+        """
         if param:
             if param.count(" "):
                 key, toState = param.split(" ", 2)
@@ -102,7 +140,7 @@ class Uif(object):
         """
         man [command]
         command: name of the command which's man string to get
-        Without parameter lists the available commands.
+        Without parameter lists the available commands. Parameters separated by spaces.
         """
         manstr = ""
         if param:
@@ -123,13 +161,22 @@ class Uif(object):
         print(manstr)
 
     def _cmd_quit(self, param):
+        """
+        Quits the program.
+        """
         self._cntrlr.stop()
 
-    def _cmd_do(self):
-        self._cntrlr._do()
+    def _cmd_bake(self, param):
+        """
+        Starts the baking process.
+        """
+        self._cntrlr._bake()
 
-    def _cmd_undo(self):
-        self._cntrlr._undo()
+    def _cmd_stop(self, param):
+        """
+        Stops the baking process.
+        """
+        self._cntrlr._stopBake()
 
     def disp(self, key, *args):
         try:
@@ -162,6 +209,6 @@ class Uif(object):
         self._listenerThread.start()
 
     def stop(self):
+        self._cntrlr._stopBake()
         self._stopReq.set()
-        #self._listenerThread.join()
 

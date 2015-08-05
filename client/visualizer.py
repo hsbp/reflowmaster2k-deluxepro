@@ -35,25 +35,6 @@ class Visualizer:
         plot.grid()
         plot.show()
         self._draw()
-        #self._drawThread.start()
 
     def stop(self):
         self._stopReq.set()
-        #self._drawThread.join()
-
-
-if __name__ == '__main__':
-    r = reflowcntrl.ReflowControl("")
-    refData = r._profileToTt(reflowcntrl.profile)
-    i = 0
-
-    def gen():
-        global i
-        i += 1
-        return refData[:i]
-
-    v = Visualizer(0.5, 1, refData, gen)
-    v.start()
-    print("hello")
-
-

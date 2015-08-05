@@ -20,8 +20,8 @@ class Pid(object):
         if coeffs is None:
             coeffs = (1, 0, 0)
         self._kp, self._ki, self._kd = coeffs
-        self._oki = 0
-        self._okd = 0
+        self._oki = self._ki
+        self._okd = self._kd
 
         self._sampleTime = 1
         self._cntrlDir = Pid.Modes.DIRECT

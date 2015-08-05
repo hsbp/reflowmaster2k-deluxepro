@@ -1,11 +1,12 @@
 #define D13 13
+#define PWM_PIN  D13
+#define ADC_PIN  A5
 
 int adc;
 char *pAdc;
 int pwmLvl = 1;
 int pwmStep = 0;
 int pwmCntr = 0;
-int pwmPin = D13;
 bool isOn = false;
 
 void setup() {
@@ -15,17 +16,19 @@ void setup() {
 }
 
 void loop() {
-  adc = analogRead(A5);
+  adc = analogRead(ADC_PIN);
   Serial.write(0xFF);
   Serial.write(pAdc, 2);
+  //delay(100);
+  
   if(Serial.available()) {
     pwmLvl = Serial.read();
   }
   if((pwmLvl > pwmStep) && !isOn) {
-    digitalWrite(pwmPin, HIGH);
+    digitalWrite(PWM_PIN, HIGH);
     isOn = true;
   } else if ((pwmLvl < pwmStep) && isOn) {
-    digitalWrite(pwmPin, LOW);
+    digitalWrite(PWM_PIN, LOW);
     isOn = false;
   }
   if(++pwmCntr > 10) {
