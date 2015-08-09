@@ -1,4 +1,6 @@
+import sys
 import threading
+import readchar
 
 class Uif(object):
 
@@ -7,16 +9,19 @@ class Uif(object):
         self._listenerThread = None
         self._stopReq = threading.Event()
         self._dispState = {}
+        self._lineBufferRLock = threading.RLock()
+        self._msgLock = threading.Lock()
+        self._lineBuffer = ""
 
     def _notfound(self, _dummy):
-        print("Command not found")
+        self.msg("Command not found")
 
     def _failed(self, exception):
-        print("Failed: %s" % exception)
+        self.msg("Failed: %s" % exception)
 
     def _pidparam(self, prop, param):
         if param == "":
-            print(getattr(self._cntrlr._pid, prop))
+            self.msg(getattr(self._cntrlr._pid, prop))
         else:
             try:
                 param = float(param)
@@ -87,7 +92,7 @@ class Uif(object):
                 for modeId, modeName in autoModes.items():
                     if currentMode & modeId:
                         state += modeName + " "
-            print(state)
+            self.msg(state)
         else:
             mode = pidModes.MANUAL
             param = param.lower()
@@ -106,7 +111,7 @@ class Uif(object):
         """
 
         if param == "":
-            print("%0.1f" % (self._cntrlr._pid.output * 100 / self._cntrlr._pid.maxOut))
+            self.msg("%0.1f" % (self._cntrlr._pid.output * 100 / self._cntrlr._pid.maxOut))
         else:
             out = float(param) / 100 * self._cntrlr._pid.maxOut
             self._cntrlr._pid.output = out
@@ -134,7 +139,46 @@ class Uif(object):
                 manstr = "There are no dispable props"
             else:
                 manstr = "Dispable properties:\n\t" + manstr
-            print(manstr)
+            self.msg(manstr)
+
+    def _cmd_quit(self, param):
+        """
+        Quits the program.
+        """
+        self._cntrlr.stop()
+
+    def _cmd_bake(self, param):
+        """
+        Starts the baking process.
+        """
+        self._cntrlr.bake()
+
+    def _cmd_stop(self, param):
+        """
+        Stops the baking process.
+        """
+        self._cntrlr.stopBake()
+
+    def _cmd_load(self, param):
+        """
+        Loads reflow profile
+        """
+        if param:
+            self._cntrlr.loadProfile(param.strip().lower())
+        else:
+            self.msg("Avaiable profiles:\n")
+            for profile in self._cntrlr._profiles:
+                self.msg("\t" + profile["name"])
+
+    def _cmd_save(self, param):
+        """
+        Saves to the .reflowcntrlrc file
+        """
+        if param:
+            if param == "pidcoeffs":
+                self._cntrlr.savePidCoeffs()
+        else:
+            self.msg("You can save:\n\tpidcoeffs")
 
     def _cmd_man(self, param):
         """
@@ -158,25 +202,7 @@ class Uif(object):
                 if func.startswith(prefix):
                     funclist.append(func[prefixLen:])
             manstr = "Avaiable commands:\n\t" + "\n\t".join(funclist)
-        print(manstr)
-
-    def _cmd_quit(self, param):
-        """
-        Quits the program.
-        """
-        self._cntrlr.stop()
-
-    def _cmd_bake(self, param):
-        """
-        Starts the baking process.
-        """
-        self._cntrlr._bake()
-
-    def _cmd_stop(self, param):
-        """
-        Stops the baking process.
-        """
-        self._cntrlr._stopBake()
+        self.msg(manstr)
 
     def disp(self, key, *args):
         try:
@@ -184,14 +210,59 @@ class Uif(object):
         except:
             self._dispState[key] = "off"
         if self._dispState[key] != "off":
-            print(", ".join(str(arg) for arg in args))
+            self.msg(", ".join(str(arg) for arg in args))
             if self._dispState[key] == "oneshot":
                 self._dispState[key] = "off"
 
+    def msg(self, msg):
+        with self._msgLock:
+            self._removePrompt()
+            print(msg)
+            self._addPrompt()
+
+    def _removePrompt(self):
+        linebuff = self._getLineBuffer()
+        sys.stdout.write("\r" + " " * (len(linebuff) + 2) + "\r")
+        sys.stdout.flush()
+
+    def _addPrompt(self):
+        linebuff = self._getLineBuffer()
+        sys.stdout.write("\r> " + linebuff)
+        sys.stdout.flush()
+
+    def _getLineBuffer(self):
+        with self._lineBufferRLock:
+            val = self._lineBuffer
+        return val
+
+    def _clearLineBuffer(self):
+        with self._lineBufferRLock:
+            self._lineBuffer = ""
+
     def listen(self):
         try:
-            while not self._cntrlr._stopReq.isSet():
-                val = raw_input("> ")
+            while not self._stopReq.isSet():
+                self._addPrompt()
+                while True:
+                    c = readchar.getch()
+                    if c in "\r\n":
+                        print("")
+                        break
+                    elif c == "\x03": # Ctrl-C
+                        raise KeyboardInterrupt
+                    elif c == "\x1a": # Ctrl-Z
+                        raise SystemExit
+                    elif c in "\x08\x7f": # Backspace / Del
+                        with self._lineBufferRLock:
+                            self._removePrompt()
+                            self._lineBuffer = self._lineBuffer[:-1]
+                            self._addPrompt()
+                    else:
+                        with self._lineBufferRLock:
+                            self._lineBuffer += c
+                        sys.stdout.write(c)
+                val = self._getLineBuffer()
+                self._clearLineBuffer()
                 if val:
                     val = val.split(" ", 1)
                     if len(val) > 1:
@@ -209,6 +280,6 @@ class Uif(object):
         self._listenerThread.start()
 
     def stop(self):
-        self._cntrlr._stopBake()
+        self._cntrlr.stopBake()
         self._stopReq.set()
 
