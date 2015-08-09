@@ -1,0 +1,37 @@
+# Serial port to Arduino. If multiple one present, then the first available will be used.
+# If no available port found, then a fake serial port will be used, so you can fiddle around
+serial /dev/tty.usbserial-A6004adL
+serial /dev/tty.SLAB_USBtoUART
+
+# ADC's reference voltage in volts
+uref 5.0
+
+# Current driven trough the temperature sensor in amperes
+iref 0.0025
+
+# Voltage divider ratio before the ADC input
+adccomp 0.8333333333333333333
+
+# Coefficients for the Steinhart-Haart formula, sperated by space
+shhcoeffs 0.049182398851342568 -0.015880288085651714 0.0018439776862060255 -7.5225149204180178e-05
+
+# PID coefficients in order of proportional, integral, derivate, separated by space
+pidcoeffs 30.0 2.0 7.0
+
+# Reflow profiles
+#   Format:
+#       profile key:value-pairs-separated-by-spaces
+#   Time measured in seconds, temp in Celsius degrees
+#   The key-value pairs are the following:
+#       name: Name of the profile. If perixed with an underscore it will be loaded as default during startup
+#       rampup: Rampup rate in Celsius per second
+#       ts: Time in soak period
+#       Tsmin: Lower end temperature of the soak period
+#       Tsmax: Higher end temperature of the soak period
+#       tl: Time in liquidous period
+#       Tl: Temp in liquidous period
+#       tp: Time in peak period
+#       Tp: Temp in peak period
+#       rampdown: Ramdown rate in Celsius per second
+profile name:_leaded rampup:2 ts:120 Tsmin:155 Tsmax:185 tl:100 Tl:215 tp:30 Tp:240 rampdown:6
+profile name:rohs rampup:2 ts:150 Tsmin:175 Tsmax:195 tl:110 Tl:215 tp:30 Tp:260 rampdown:6
