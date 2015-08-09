@@ -167,9 +167,9 @@ class Pid(object):
 
     def compute(self):
         error = self._setpoint - self._input
-        self._iterm = self._clamp(self._ki * error, self._outMin, self._outMax)
+        self._iterm = self._clamp(self._iterm + self._ki * error, self._outMin, self._outMax)
         dInput = self._input - self._lastInput
-        pidResult = self._kp * error + self._iterm - self._kd * self._kd * dInput
+        pidResult = self._kp * error + self._iterm - self._kd * dInput
         self._output = self._clamp(pidResult, self._outMin, self._outMax)
         self._lastInput = self._input
 
