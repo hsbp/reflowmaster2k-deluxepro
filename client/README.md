@@ -1,6 +1,6 @@
-# Py client for Reflowmaster2k Deluxe Pro
+#Py client for Reflowmaster2k Deluxe Pro
 
- Dependencies
+Dependencies
 -------------
 
 - Python 2.x   (tested on 2.7.6)
@@ -8,7 +8,8 @@
 - Matplotlib   (tested on 1.3.1)
 - NumPy
 
- Setup
+
+Setup
 -------------
 
 Check out the .reflowcntrlrc file.
