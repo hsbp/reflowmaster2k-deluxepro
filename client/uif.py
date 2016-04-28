@@ -180,6 +180,16 @@ class Uif(object):
         else:
             self.msg("You can save:\n\tpidcoeffs")
 
+    def _cmd_tune(self, param):
+        self._cntrlr.autoTune(param)
+
+    def _cmd_draw(self, param):
+        if param:
+            enbable = bool(param)
+        else:
+            enbable = True
+        self._cntrlr.draw(enbable)
+
     def _cmd_man(self, param):
         """
         man [command]
@@ -210,7 +220,13 @@ class Uif(object):
         except:
             self._dispState[key] = "off"
         if self._dispState[key] != "off":
-            self.msg(", ".join(str(arg) for arg in args))
+            def pack(x):
+                try:
+                    None in x
+                except:
+                    x = (x,)
+                return x
+            self.msg("\t".join(": ".join(str(sarg) for sarg in pack(arg)) for arg in args))
             if self._dispState[key] == "oneshot":
                 self._dispState[key] = "off"
 
@@ -239,15 +255,50 @@ class Uif(object):
         with self._lineBufferRLock:
             self._lineBuffer = ""
 
+    def _execCommand(self, val):
+        val = val.split(" ", 1)
+        if len(val) > 1:
+            cmd, params = val
+        else:
+            cmd = val[0]
+            params = ""
+        cmdProcessor = getattr(self, "_cmd_" + cmd.strip().lower(), self._notfound)
+        cmdProcessor(params.strip())
+
     def listen(self):
+        escapeState = 0
+        historyState = 0
+        history = []
         try:
             while not self._stopReq.isSet():
                 self._addPrompt()
                 while True:
                     c = readchar.getch()
-                    if c in "\r\n":
-                        print("")
-                        break
+                    if c == "\x1b": # ESC
+                        if escapeState > 0:
+                            escapeState = 0
+                        else:
+                            escapeState = 1
+                    elif escapeState == 2:
+                        escapeState = 0
+                        lastHistoryState = historyState
+                        if c == "A":
+                            historyState -= 1
+                        elif c == "B":
+                            if historyState < -1:
+                                historyState += 1
+                        with self._lineBufferRLock:
+                            self._removePrompt()
+                            try:
+                                self._lineBuffer = history[historyState]
+                            except IndexError:
+                                historyState = lastHistoryState
+                            self._addPrompt()
+                    elif escapeState == 1:
+                        if c == "[":
+                            escapeState = 2
+                        else:
+                            escapeState = 0
                     elif c == "\x03": # Ctrl-C
                         raise KeyboardInterrupt
                     elif c == "\x1a": # Ctrl-Z
@@ -257,6 +308,10 @@ class Uif(object):
                             self._removePrompt()
                             self._lineBuffer = self._lineBuffer[:-1]
                             self._addPrompt()
+                    elif c in "\r\n":
+                        print("")
+                        historyState = 0
+                        break
                     else:
                         with self._lineBufferRLock:
                             self._lineBuffer += c
@@ -264,14 +319,8 @@ class Uif(object):
                 val = self._getLineBuffer()
                 self._clearLineBuffer()
                 if val:
-                    val = val.split(" ", 1)
-                    if len(val) > 1:
-                        cmd, params = val
-                    else:
-                        cmd = val[0]
-                        params = ""
-                    cmdProcessor = getattr(self, "_cmd_" + cmd.strip().lower(), self._notfound)
-                    cmdProcessor(params.strip())
+                    history.append(val)
+                    self._execCommand(val)
         except KeyboardInterrupt:
             self._cntrlr.stop()
 
@@ -282,4 +331,3 @@ class Uif(object):
     def stop(self):
         self._cntrlr.stopBake()
         self._stopReq.set()
-

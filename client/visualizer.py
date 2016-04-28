@@ -12,6 +12,7 @@ class Visualizer:
         self._clearReq = multiprocessing.Event()
         self._clearDone = multiprocessing.Event()
         self._drawLive = multiprocessing.Event()
+        self._scrollLive = multiprocessing.Event()
         self._startTime = 0
         self._processStarted = False
 
@@ -25,6 +26,7 @@ class Visualizer:
         plot.show()
         while not self._exitReq.is_set():
             refDataX, refDataY = self._graphData.get()
+            refDataLen = len(refDataX)
             liveDataX = []
             liveDataY = []
             axes.plot(refDataX, refDataY, "b-")
@@ -36,8 +38,8 @@ class Visualizer:
                 try:
                     while True:
                         newPoint = self._graphData.get(block=False)
-                        liveDataX.append(newPoint[0])
                         liveDataY.append(newPoint[1])
+                        liveDataX.append(newPoint[0])
                         liveDataLine.set_xdata(liveDataX)
                         liveDataLine.set_ydata(liveDataY)
                 except Queue.Empty:
@@ -87,10 +89,16 @@ class Visualizer:
         self._stopReq.set()
         self._drawLive.clear()
 
+    def scrollLive(self, enable):
+        if enable:
+            self._scrollLive.set()
+        else:
+            self._scrollLive.clear()
+
     def update(self, value):
         elapsed = time.time() - self._startTime
         if self._drawLive.is_set():
-            self._graphData.put((elapsed, value))
+            self._graphData.put((elapsed - 20, value))
 
     def stop(self):
         self.disableLive()

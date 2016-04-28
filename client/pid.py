@@ -16,6 +16,11 @@ class Pid(object):
         DIRECT = 0
         REVERSE = 1
 
+    class CallbackType:
+        UPDATE = 1
+        CALC = 2
+        OUT = 3
+
     def __init__(self, updateCallback=None, outputChangedCallback=None, coeffs=None):
         if coeffs is None:
             coeffs = (1, 0, 0)
@@ -32,11 +37,13 @@ class Pid(object):
         self._setpoint = 0
 
         self._iterm = 0
+        self._dterm = 0
         self._lastInput = 0
         self._outMin = 0
-        self._outMax = 255
+        self._outMax = 25
 
         self._updateCallback = updateCallback
+        self._calcDoneCallback = None
         self._outputChangedCallback = outputChangedCallback
         self._stopReq = threading.Event()
         self._updateThread = None
@@ -154,6 +161,16 @@ class Pid(object):
     def isRunning(self):
         return not self._stopReq.isSet()
 
+    def attachCallback(self, type, callback):
+        if type == self.CallbackType.UPDATE:
+            self._updateCallback = callback
+        elif type == self.CallbackType.CALC:
+            self._calcDoneCallback = callback
+        elif type == self.CallbackType.OUT:
+            self._outputChangedCallback = callback
+        else:
+            raise Exception("Unknown callback type")
+
     def _clamp(self, val, low, high):
         if val > high:
             val = high
@@ -166,10 +183,12 @@ class Pid(object):
         self._iterm = self._clamp(self._output, self._outMin, self._outMax)
 
     def compute(self):
-        error = self._setpoint - self._input
-        self._iterm = self._clamp(self._iterm + self._ki * error, self._outMin, self._outMax)
+        self._error = self._setpoint - self._input
         dInput = self._input - self._lastInput
-        pidResult = self._kp * error + self._iterm - self._kd * dInput
+        self._pterm = self._kp * self._error
+        self._iterm = self._clamp(self._iterm + self._ki * self._error, self._outMin, self._outMax)
+        self._dterm = self._kd * dInput
+        pidResult = self._pterm + self._iterm - self._dterm
         self._output = self._clamp(pidResult, self._outMin, self._outMax)
         self._lastInput = self._input
 
@@ -182,6 +201,8 @@ class Pid(object):
                 self._input = self._updateCallback()
             if self.cntrlMode & Pid.Modes.AUTO_CALC:
                 self.compute()
+                if self._calcDoneCallback is not None:
+                    self._calcDoneCallback(self._error, self._pterm, self._iterm, self._dterm, self._output)
             if self._cntrlMode & Pid.Modes.AUTO_OUT and \
                self._outputChangedCallback is not None and \
                self._output != lastOutput:

@@ -1,22 +1,26 @@
 # Serial port to Arduino. If multiple one present, then the first available will be used.
 # If no available port found, then a fake serial port will be used, so you can fiddle around
+serial /dev/tty.Repleo-CH341-000013FA
+serial /dev/tty.Repleo-CH341-000012FD
 serial /dev/tty.usbserial-A6004adL
 serial /dev/tty.SLAB_USBtoUART
 
 # ADC's reference voltage in volts
-uref 5.0
+uref 4.69
 
 # Current driven trough the temperature sensor in amperes
-iref 0.0025
+iref 0.00244
 
 # Voltage divider ratio before the ADC input
-adccomp 0.8333333333333333333
+adccomp 0.6815
 
 # Coefficients for the Steinhart-Haart formula, sperated by space
 shhcoeffs 0.049182398851342568 -0.015880288085651714 0.0018439776862060255 -7.5225149204180178e-05
 
 # PID coefficients in order of proportional, integral, derivate, separated by space
-pidcoeffs 30.0 2.0 7.0
+#pidcoeffs 30.0 2.0 7.0
+#pidcoeffs 32 0 333
+pidcoeffs 1.05 0 5
 
 # Reflow profiles
 #   Format:
@@ -33,5 +37,6 @@ pidcoeffs 30.0 2.0 7.0
 #       tp: Time in peak period
 #       Tp: Temp in peak period
 #       rampdown: Ramdown rate in Celsius per second
+profile name:calib rampup:1 ts:120 Tsmin:120 Tsmax:120 tl:100 Tl:120 tp:30 Tp:120 rampdown:10
 profile name:_leaded rampup:2 ts:120 Tsmin:155 Tsmax:185 tl:100 Tl:215 tp:30 Tp:240 rampdown:6
 profile name:rohs rampup:2 ts:150 Tsmin:175 Tsmax:195 tl:110 Tl:215 tp:30 Tp:260 rampdown:6

@@ -111,8 +111,8 @@ class Storage():
                         missing = True
                         break
                 if missing:
-                    continue
-                if profile["name"].startswith("_"):
+                    continue  # Skip incomplete profiles
+                if profile["name"].startswith("_"):  # Default profile name starts with an underscore
                     profile["name"] = profile["name"][1:]
                     profiles.insert(0, profile)
                 else:
