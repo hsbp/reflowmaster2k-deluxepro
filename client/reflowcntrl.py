@@ -66,10 +66,11 @@ class ReflowControl:
         self._graph = None
         self._new = False
         self._pid.attachCallback(self._pid.CallbackType.CALC, self._pidCalcDone)
-        self._logger = log.Logger(enabled=False)
+        self._logger = log.Logger()
         self._logger._enabled = False#True
 
     def _convertToSteps(self, begin, end, duration, timebase):
+        #duration *= 1.4
         delta = end - begin
         stepNo = int(round(duration / timebase))
         stepNo = 1 if stepNo == 0 else stepNo
@@ -78,8 +79,7 @@ class ReflowControl:
         steps[-1] = end
         return steps
 
-
-    def _profileToTt1(self, profile, timebase=0.5):
+    def _profileToTt(self, profile, timebase=0.5):
         steps = []
         ambient = 50
         # Preamble
@@ -107,42 +107,6 @@ class ReflowControl:
         steps.extend(self._convertToSteps(profile["Tl"], ambient, coolDowmTime, timebase))
         timestamps = tuple(timebase * i for i in range(len(steps)))
         return (timestamps, steps)
-
-    def _profileToTt2(self, profile, timebase=0.5):
-        steps = []
-        ambient = 50
-        # Preamble
-        steps.extend(self._convertToSteps(50, 50, 30, timebase))
-        # Ambient to preheat
-        rampupTime = (profile["Tsmin"] - ambient) / profile["rampup"]
-        steps.extend(self._convertToSteps(ambient, profile["Tsmin"], rampupTime, timebase))
-        # Preheat
-        steps.extend(self._convertToSteps(profile["Tsmin"], profile["Tsmax"], profile["ts"], timebase))
-        # Preheat to Liquidous
-        tlTotpTime = tpTotlTime = (profile["tl"] - profile["tp"]) / 2.0
-
-        deltaTsTl = profile["Tl"] - profile["Tsmax"]
-        slopeTsTl = deltaTsTl / float(tlTotpTime)
-        durTsmaxTl = slopeTsTl * deltaTsTl
-
-        #deltaTsmaxTl = profile["Tl"] - profile["Tsmax"]
-        #deltaTlTp = profile["Tp"] - profile["Tl"]
-        #slopeTsmaxTl = slopeTlTp = deltaTlTp / float(tlTotpTime)
-        #durTsmaxTl = deltaTsmaxTl * (slopeTsmaxTl * 2.0)
-        steps.extend(self._convertToSteps(profile["Tsmax"], profile["Tl"], durTsmaxTl, timebase))
-        # Liquidous to Peak
-        steps.extend(self._convertToSteps(profile["Tl"], profile["Tp"], tlTotpTime, timebase))
-        # Reflow
-        steps.extend(self._convertToSteps(profile["Tp"], profile["Tp"], profile["tp"], timebase))
-        # Back to Liquidous
-        steps.extend(self._convertToSteps(profile["Tp"], profile["Tl"], tpTotlTime, timebase))
-        # Cool down
-        coolDowmTime = (profile["Tl"] - ambient) / profile["rampdown"]
-        steps.extend(self._convertToSteps(profile["Tl"], ambient, coolDowmTime, timebase))
-        timestamps = tuple(timebase * i for i in range(len(steps)))
-        return (timestamps, steps)
-
-    _profileToTt = _profileToTt2
 
     def _updateTemp(self):
         adcValue = self._getAdcValue()
@@ -251,7 +215,6 @@ class ReflowControl:
             self._pid._setpoint = setPoint
             time.sleep(0.5)
         self._pid.setPoint = 0
-        time.sleep(30)
         self._graph.disableLive()
         self._baking.clear()
         self._uif.msg("Reflow finished")

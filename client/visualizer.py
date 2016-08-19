@@ -98,7 +98,7 @@ class Visualizer:
     def update(self, value):
         elapsed = time.time() - self._startTime
         if self._drawLive.is_set():
-            self._graphData.put((elapsed - 20, value))
+            self._graphData.put((elapsed, value))
 
     def stop(self):
         self.disableLive()

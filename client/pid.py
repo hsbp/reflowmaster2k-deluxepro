@@ -40,7 +40,7 @@ class Pid(object):
         self._dterm = 0
         self._lastInput = 0
         self._outMin = 0
-        self._outMax = 25
+        self._outMax = 255
 
         self._updateCallback = updateCallback
         self._calcDoneCallback = None

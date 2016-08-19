@@ -2,23 +2,17 @@ import time
 
 class Logger(object):
 
-    def __init__(self, enabled):
+    def __init__(self):
         self._fileName = "log_%s" % time.strftime("%H-%M-%S")
-        self._fileCreated = False
-        self._header = []
-        self._entry = {}
-        self._enabled = enabled
-
-    def _createFile(self):
         with open(self._fileName, "w"):
             pass
-        self._fileCreated = True
+        self._header = []
+        self._entry = {}
+        self._enabled = True
 
     def _appendEntry(self):
         if not self._enabled:
             return
-        if not self._fileCreated:
-            self._createFile()
         headerChanged = False
         for key in self._entry.keys():
             if key not in self._header:

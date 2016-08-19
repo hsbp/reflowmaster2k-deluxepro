@@ -5,6 +5,7 @@ serial /dev/tty.Repleo-CH341-000012FD
 serial /dev/tty.usbserial-A6004adL
 serial /dev/tty.SLAB_USBtoUART
 
+
 # ADC's reference voltage in volts
 uref 4.69
 
@@ -20,7 +21,9 @@ shhcoeffs 0.049182398851342568 -0.015880288085651714 0.0018439776862060255 -7.52
 # PID coefficients in order of proportional, integral, derivate, separated by space
 #pidcoeffs 30.0 2.0 7.0
 #pidcoeffs 32 0 333
-pidcoeffs 1.05 0 5
+#pidcoeffs 5 0 20
+#5 0 10
+1 0 0
 
 # Reflow profiles
 #   Format:
@@ -38,5 +41,6 @@ pidcoeffs 1.05 0 5
 #       Tp: Temp in peak period
 #       rampdown: Ramdown rate in Celsius per second
 profile name:calib rampup:1 ts:120 Tsmin:120 Tsmax:120 tl:100 Tl:120 tp:30 Tp:120 rampdown:10
-profile name:_leaded rampup:2 ts:120 Tsmin:155 Tsmax:185 tl:100 Tl:215 tp:30 Tp:240 rampdown:6
+profile name:_leaded rampup:1 ts:120 Tsmin:155 Tsmax:185 tl:100 Tl:215 tp:30 Tp:240 rampdown:4
+profile name:leaded2 rampup:1 ts:100 Tsmin:155 Tsmax:185 tl:70 Tl:215 tp:20 Tp:230 rampdown:4
 profile name:rohs rampup:2 ts:150 Tsmin:175 Tsmax:195 tl:110 Tl:215 tp:30 Tp:260 rampdown:6
