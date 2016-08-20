@@ -212,7 +212,7 @@ class ReflowControl:
         for setPoint in self._refData[1]:
             if self._stopBakeReq.isSet():
                 break
-            self._pid._setpoint = setPoint
+            self._pid._setpoint = setPoint + 7
             time.sleep(0.5)
         self._pid.setPoint = 0
         self._graph.disableLive()
